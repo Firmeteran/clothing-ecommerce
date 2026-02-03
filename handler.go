@@ -360,7 +360,7 @@ func (h *Handler) ReadOrdersByUserID(userID int) ([]Order, error) {
 		}
 	}
 
-	productIDs := make([]int, len(productIDset))
+	productIDs := make([]int, 0, len(productIDset))
 	for id := range productIDset {
 		productIDs = append(productIDs, id)
 	}
