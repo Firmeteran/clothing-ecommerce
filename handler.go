@@ -167,6 +167,10 @@ func (h *Handler) ReadCartItemsByUserID(userID int) ([]CartItem, error) {
 		cartItems = append(cartItems, cartItem)
 	}
 	
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	
 	return cartItems, nil
 }
 
