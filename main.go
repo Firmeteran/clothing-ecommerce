@@ -77,6 +77,8 @@ Register:
 		slog.Error(err.Error())
 		goto MainMenu
 	}
+	
+	fmt.Println("\nRegister success!!!!")
 
 	goto UserMenu
 
@@ -101,6 +103,8 @@ Login:
 	}
 
 	user = u
+	
+	fmt.Println("\nLogin success!!!!")
 
 	if user.Role == "user" {
 		goto UserMenu
@@ -138,6 +142,7 @@ UserMenu:
 	}
 
 ShowAllProducts:
+	fmt.Println("\nShowing all products.....")
 	w = tabwriter.NewWriter(os.Stdout, 5, 0, 2, ' ', tabwriter.AlignRight)
 	fmt.Fprintln(w, "Name\tDescription\tPrice")
 
