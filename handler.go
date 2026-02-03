@@ -78,8 +78,41 @@ func (h *Handler) ReadAllProducts() ([]Product, error) {
 			id,
 			name,
 			description,
-			price;`
+			price
+		FROM products;`,
 	)
+	
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	
+
+	products := make([]Product, 0, 50)
+	
+	for rows.Next() {
+		var product Product
+		var price int
+		
+		if err := rows.Scan(
+			&product.Id,
+			&product.Name,
+			&product.Description,
+			&price,
+		); err != nil {
+			return nil, err
+		}
+		
+		product.Price = float32(price) / 100
+		
+		products = append(products, product)
+	}
+	
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	
+	return products, nil
 }
 
 // create cart item
