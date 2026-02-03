@@ -77,7 +77,7 @@ Register:
 		slog.Error(err.Error())
 		goto MainMenu
 	}
-	
+
 	fmt.Println("\nRegister success!!!!")
 
 	goto UserMenu
@@ -103,7 +103,7 @@ Login:
 	}
 
 	user = u
-	
+
 	fmt.Println("\nLogin success!!!!")
 
 	if user.Role == "user" {
@@ -114,6 +114,10 @@ Login:
 
 Exit:
 	fmt.Println("\nGoodbye!!!!")
+	return
+
+AdminMenu:
+	fmt.Println("Placeholder")
 	return
 
 UserMenu:
