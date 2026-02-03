@@ -9,7 +9,7 @@ CREATE TABLE `users` (
   `id` INTEGER AUTO_INCREMENT PRIMARY KEY,
   `email` VARCHAR(100) NOT NULL UNIQUE,
   `password` VARCHAR(100) NOT NULL,
-  `role` VARCHAR(100) NOT NULL DEFAULT 'user'
+  `role` VARCHAR(50) NOT NULL DEFAULT 'user'
 );
 
 CREATE TABLE `cart_items` (
