@@ -239,7 +239,7 @@ func (h *Handler) CreateOrder(order Order) error {
 }
 
 // read orders by user id
-func (h *Handler) ReadOrdersByUserID(userID int) ([]Order, []int, error) {
+func (h *Handler) ReadOrdersByUserID(userID int) ([]Order, error) {
 	rows, err := h.DB.Query(
 		`SELECT
 			o.id,
@@ -255,7 +255,7 @@ func (h *Handler) ReadOrdersByUserID(userID int) ([]Order, []int, error) {
 	)
 
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -274,7 +274,7 @@ func (h *Handler) ReadOrdersByUserID(userID int) ([]Order, []int, error) {
 			&product.Id,
 			&product.Quantity,
 		); err != nil {
-			return nil, nil, err
+			return nil, err
 		}
 
 		productIDset[product.Id] = struct{}{}
@@ -313,5 +313,5 @@ func (h *Handler) ReadOrdersByUserID(userID int) ([]Order, []int, error) {
 		productIDs = append(productIDs, id)
 	}
 	
-	return orders, productIDs, nil
+	return orders, nil
 }
