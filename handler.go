@@ -88,7 +88,7 @@ func (h *Handler) ReadAllProducts() ([]Product, error) {
 	defer rows.Close()
 	
 
-	products := make([]Product, 0, 50)
+	products := make([]Product, 0, 10)
 	
 	for rows.Next() {
 		var product Product
@@ -116,7 +116,21 @@ func (h *Handler) ReadAllProducts() ([]Product, error) {
 }
 
 // create cart item
-
+func (h *Handler) CreateCartItem(user_id, product_id , quantity int) error {
+	_, err := h.DB.Exec(
+		`INSERT INTO cart_items
+			(user_id, product_id, quantity)
+		VALUES
+			(?, ?, ?);`,
+		user_id, product_id, quantity,
+	)
+	
+	if err != nil {
+		return err
+	}
+	
+	return nil
+}
 
 // read cart items by user id
 
