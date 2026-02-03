@@ -355,14 +355,31 @@ func (h *Handler) ReadOrdersByUserID(userID int) ([]Order, error) {
 		}
 	}
 
-	orders := make([]Order, len(mapOrders))
-	for _, order := range mapOrders {
-		orders = append(orders, order)
-	}
-
 	productIDs := make([]int, len(productIDset))
 	for id := range productIDset {
 		productIDs = append(productIDs, id)
+	}
+
+	products, err := h.ReadProductsByProductIDs(productIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	mapProducts := make(map[int]Product)
+	for _, product := range products {
+		mapProducts[product.Id] = product
+	}
+
+	orders := make([]Order, 0, len(mapOrders))
+	for _, order := range mapOrders {
+		for i, product := range order.Products {
+			if p, exist := mapProducts[product.Id]; exist {
+				order.Products[i].Name = p.Name
+				order.Products[i].Description = p.Description
+				order.Products[i].Price = p.Price
+			}
+		}
+		orders = append(orders, order)
 	}
 
 	return orders, nil
