@@ -172,7 +172,9 @@ func (h *Handler) CreateCartItem(userID, productID, quantity int) error {
 		`INSERT INTO cart_items
 			(user_id, product_id, quantity)
 		VALUES
-			(?, ?, ?);`,
+			(?, ?, ?) AS new
+		ON DUPLICATE KEY
+		UPDATE quantity = cart_items.quantity + new.quantity;`,
 		userID, productID, quantity,
 	)
 
