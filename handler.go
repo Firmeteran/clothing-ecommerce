@@ -2,6 +2,8 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
+	"strings"
 )
 
 type Handler struct {
@@ -69,6 +71,56 @@ func (h *Handler) CreateProduct(name, description string, price int) error {
 	}
 
 	return nil
+}
+
+// read products by product ids
+func (h *Handler) ReadProductsByProductIDs(productIDs []int) ([]Product, error) {
+	questionMarks := make([]string, len(productIDs))
+	IDs := make([]any, len(productIDs))
+
+	for i, id := range productIDs {
+		questionMarks[i] = "?"
+		IDs[i] = id
+	}
+
+	query := fmt.Sprintf(
+		`SELECT
+			id,
+			name,
+			description,
+			price
+		FROM products
+		WHERE id IN (%s)`,
+		strings.Join(questionMarks, ","),
+	)
+
+	rows, err := h.DB.Query(query, IDs...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	products := make([]Product, 0, 10)
+
+	for rows.Next() {
+		var product Product
+		var price int
+
+		if err := rows.Scan(
+			&product.Id,
+			&product.Name,
+			&product.Description,
+			&price,
+		); err != nil {
+			return nil, err
+		}
+
+		product.Price = float32(price) / 100
+
+		products = append(products, product)
+	}
+
+	return products, nil
 }
 
 // read all products
@@ -206,14 +258,14 @@ func (h *Handler) CreateOrder(order Order) error {
 	if err != nil {
 		return err
 	}
-	
+
 	orderId, err := result.LastInsertId()
 	if err != nil {
 		return err
 	}
-	
+
 	order.Id = int(orderId)
-	
+
 	stmt, err := tx.Prepare(
 		`INSERT INTO order_items
 			(order_id, product_id, quantity)
@@ -223,14 +275,14 @@ func (h *Handler) CreateOrder(order Order) error {
 	if err != nil {
 		return err
 	}
-	
+
 	for _, product := range order.Products {
 		_, err := stmt.Exec(order.Id, product.Id, product.Quantity)
 		if err != nil {
 			return err
 		}
 	}
-	
+
 	if err := tx.Commit(); err != nil {
 		return err
 	}
@@ -302,16 +354,16 @@ func (h *Handler) ReadOrdersByUserID(userID int) ([]Order, error) {
 			}
 		}
 	}
-	
+
 	orders := make([]Order, len(mapOrders))
 	for _, order := range mapOrders {
 		orders = append(orders, order)
 	}
-	
+
 	productIDs := make([]int, len(productIDset))
 	for id := range productIDset {
 		productIDs = append(productIDs, id)
 	}
-	
+
 	return orders, nil
 }
