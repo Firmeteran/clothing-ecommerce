@@ -31,7 +31,29 @@ func (h *Handler) CreateUser(email, password string) error {
 }
 
 // read user by email
-
+func (h *Handler) ReadUserByEmail(email string) (User, error) {
+	var user User
+	
+	if err := h.DB.QueryRow(
+		`SELECT
+			id,
+			email,
+			password,
+			role
+		FROM users
+		WHERE email = ?`,
+		email,
+	).Scan(
+		&user.Id,
+		&user.Email,
+		&user.Password,
+		&user.Role,
+	); err != nil {
+		return User{}, err
+	}
+	
+	return user, nil
+}
 
 // create product
 
