@@ -18,8 +18,7 @@ func (h *Handler) CreateUser(email, password string) error {
 		`INSERT INTO users
 			(email, password)
 		VALUES
-			(?, ?)
-		`,
+			(?, ?);`,
 		email, password,
 	)
 	
@@ -41,7 +40,7 @@ func (h *Handler) ReadUserByEmail(email string) (User, error) {
 			password,
 			role
 		FROM users
-		WHERE email = ?`,
+		WHERE email = ?;`,
 		email,
 	).Scan(
 		&user.Id,
