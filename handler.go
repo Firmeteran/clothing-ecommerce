@@ -189,16 +189,49 @@ func (h *Handler) DeleteCartItemsByUserID(userID int) error {
 }
 
 // create order
-func (h *Handler) CreateOrder(userID, totalPrice int) error {
-	_, err := h.DB.Exec(
+func (h *Handler) CreateOrder(order Order) error {
+	tx, err := h.DB.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	result, err := tx.Exec(
 		`INSERT INTO orders
 			(user_id, total_price)
 		VALUES
 			(?, ?);`,
-		userID, totalPrice,
+		order.UserId, order.TotalPrice,
 	)
-
 	if err != nil {
+		return err
+	}
+	
+	orderId, err := result.LastInsertId()
+	if err != nil {
+		return err
+	}
+	
+	order.Id = int(orderId)
+	
+	stmt, err := tx.Prepare(
+		`INSERT INTO order_items
+			(order_id, product_id, quantity)
+		VALUES
+			(?, ?, ?)`,
+	)
+	if err != nil {
+		return err
+	}
+	
+	for _, product := range order.Products {
+		_, err := stmt.Exec(order.Id, product.Id, product.Quantity)
+		if err != nil {
+			return err
+		}
+	}
+	
+	if err := tx.Commit(); err != nil {
 		return err
 	}
 
