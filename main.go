@@ -148,7 +148,7 @@ UserMenu:
 ShowAllProducts:
 	fmt.Println("\nShowing all products.....")
 	w = tabwriter.NewWriter(os.Stdout, 0, 0, 5, ' ', tabwriter.Debug)
-	fmt.Fprintln(w, "Name\tDescription\tPrice")
+	fmt.Fprintln(w, "\nName\tDescription\tPrice")
 
 	products, err := handler.ReadAllProducts()
 	if err != nil {
@@ -157,7 +157,7 @@ ShowAllProducts:
 	}
 
 	for _, product := range products {
-		fmt.Fprintf(w, "%s\t%s\t%.2f\n", product.Name, product.Description, product.Price)
+		fmt.Fprintf(w, "%s\t%s\tRp%.2f\n", product.Name, product.Description, product.Price)
 	}
 
 	if err := w.Flush(); err != nil {
