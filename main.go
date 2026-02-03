@@ -121,12 +121,12 @@ UserMenu:
 	switch input {
 	case "1":
 		goto ShowAllProducts
-	case "2":
-		goto AddToCart
-	case "3":
-		goto ShowCart
-	case "4":
-		goto CreateOrder
+	// case "2":
+	// 	goto AddToCart
+	// case "3":
+	// 	goto ShowCart
+	// case "4":
+	// 	goto CreateOrder
 	default:
 		goto Exit
 	}
@@ -142,7 +142,7 @@ ShowAllProducts:
 	}
 	
 	for _, product := range products {
-		fmt.Fprintln(w, "%s\t%s\t%.2f", product.Name, product.Description, product.Price)
+		fmt.Fprintf(w, "%s\t%s\t%.2f\n", product.Name, product.Description, product.Price)
 	}
 	
 	if err := w.Flush(); err != nil {
