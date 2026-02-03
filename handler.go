@@ -175,7 +175,19 @@ func (h *Handler) ReadCartItemsByUserID(userID int) ([]CartItem, error) {
 }
 
 // delete cart items by user id
-
+func (h *Handler) DeleteCartItemsByUserID(userID int) error {
+	_, err := h.DB.Exec(
+		`DELETE FROM cart_items
+		WHERE user_id = ?;`,
+		userID,
+	)
+	
+	if err != nil {
+		return err
+	}
+	
+	return nil
+}
 
 // create order by user id
 
