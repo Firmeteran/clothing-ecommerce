@@ -20,7 +20,6 @@ type CartItem struct {
 	Id        int
 	UserId    int
 	ProductId int
-	UnitPrice float32
 	Quantity  int
 }
 
@@ -28,7 +27,6 @@ type OrderItem struct {
 	Id        int
 	OrderId   int
 	ProductId int
-	UnitPrice float32
 	Quantity  int
 }
 

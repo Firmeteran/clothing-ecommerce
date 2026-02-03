@@ -116,13 +116,13 @@ func (h *Handler) ReadAllProducts() ([]Product, error) {
 }
 
 // create cart item
-func (h *Handler) CreateCartItem(user_id, product_id , quantity int) error {
+func (h *Handler) CreateCartItem(userID, productID , quantity int) error {
 	_, err := h.DB.Exec(
 		`INSERT INTO cart_items
 			(user_id, product_id, quantity)
 		VALUES
 			(?, ?, ?);`,
-		user_id, product_id, quantity,
+		userID, productID, quantity,
 	)
 	
 	if err != nil {
@@ -133,7 +133,42 @@ func (h *Handler) CreateCartItem(user_id, product_id , quantity int) error {
 }
 
 // read cart items by user id
-
+func (h *Handler) ReadCartItemsByUserID(userID int) ([]CartItem, error) {
+	rows, err := h.DB.Query(
+		`SELECT
+			id,
+			user_id,
+			product_id,
+			quantity
+		FROM cart_items
+		WHERE user_id = ?;`,
+		userID,
+	)
+	
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	
+	cartItems := make([]CartItem, 0, 10)
+	
+	for rows.Next() {
+		var cartItem CartItem
+		
+		if err := rows.Scan(
+			&cartItem.Id,
+			&cartItem.UserId,
+			&cartItem.ProductId,
+			&cartItem.Quantity,
+		); err != nil {
+			return nil, err
+		}
+		
+		cartItems = append(cartItems, cartItem)
+	}
+	
+	return cartItems, nil
+}
 
 // delete cart items by user id
 
