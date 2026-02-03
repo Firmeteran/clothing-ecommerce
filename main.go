@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"os"
 	"strings"
+	"text/tabwriter"
 
 	"github.com/joho/godotenv"
 )
@@ -32,6 +33,7 @@ func main() {
 	var user User
 	var u User
 	var input string
+	var w *tabwriter.Writer
 	scanner := bufio.NewScanner(os.Stdin)
 
 	fmt.Println("\n------- Welcome to Hacktiv8 Clothing Store -------")
@@ -126,4 +128,25 @@ UserMenu:
 	default:
 		goto Exit
 	}
+	
+ShowAllProducts:
+	w = tabwriter.NewWriter(os.Stdout, 5, 0, 2, ' ', tabwriter.AlignRight)
+	fmt.Fprintln(w, "Name\tDescription\tPrice")
+	
+	products, err := handler.ReadAllProducts()
+	if err != nil {
+		slog.Error(err.Error())
+		return
+	}
+	
+	for _, product := range products {
+		fmt.Fprintln(w, "%s\t%s\t%.2f", product.Name, product.Description, product.Price)
+	}
+	
+	if err := w.Flush(); err != nil {
+		slog.Error(err.Error())
+		goto UserMenu
+	}
+	
+	goto UserMenu
 }
