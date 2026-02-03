@@ -147,7 +147,7 @@ UserMenu:
 
 ShowAllProducts:
 	fmt.Println("\nShowing all products.....")
-	w = tabwriter.NewWriter(os.Stdout, 5, 0, 2, ' ', tabwriter.AlignRight)
+	w = tabwriter.NewWriter(os.Stdout, 0, 0, 5, ' ', tabwriter.Debug)
 	fmt.Fprintln(w, "Name\tDescription\tPrice")
 
 	products, err := handler.ReadAllProducts()
