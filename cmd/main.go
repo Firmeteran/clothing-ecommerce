@@ -252,6 +252,8 @@ AddToCart:
 		slog.Error(err.Error())
 		goto AddToCart
 	}
+	
+	fmt.Println("\nAdd to cart success!!!!")
 
 ShowCart:
 	cartItems, err = h.ReadCartItemsByUserID(user.Id)
