@@ -130,8 +130,11 @@ Exit:
 
 AdminMenu:
 	fmt.Println("\nAdmin Menu:")
-	fmt.Println("1. Show All Products")
-	fmt.Println("2. Create Product")
+	fmt.Println("1. Create Product")
+	fmt.Println("2. Show User Reports")
+	fmt.Println("3. Show Order Reports")
+	fmt.Println("4. Show Stock Reports")
+	fmt.Print("Your input (1/2/3/4): ")
 
 	scanner.Scan()
 	input = strings.TrimSpace(scanner.Text())
@@ -139,8 +142,12 @@ AdminMenu:
 	switch input {
 	case "1":
 		goto CreateProduct
-	case "2":
-		goto ShowAllProducts
+	// case "2":
+	// goto ShowUserReports
+	// case "3":
+	// goto ShowOrderReports
+	// case "4":
+	// goto ShowStockReports
 	default:
 		goto Exit
 	}
