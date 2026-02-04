@@ -36,14 +36,17 @@ func main() {
 	h := handler.NewHandler(db)
 
 	// variables
-	var user entity.User
-	var u entity.User
-	var products []entity.Product
-	var product entity.Product
-	var cartItems []entity.CartItem
-	var priceStr string
-	var input string
-	var buf bytes.Buffer
+	var (
+		user      entity.User
+		u         entity.User
+		products  []entity.Product
+		product   entity.Product
+		cartItems []entity.CartItem
+		priceStr  string
+		input     string
+		buf       bytes.Buffer
+		price     int
+	)
 	w := tabwriter.NewWriter(&buf, 0, 0, 1, ' ', tabwriter.Debug)
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -186,13 +189,13 @@ CreateProduct:
 	scanner.Scan()
 	priceStr = strings.TrimSpace(scanner.Text())
 
-	product.Price, err = strconv.Atoi(priceStr)
+	price, err = strconv.Atoi(priceStr)
 	if err != nil || product.Price <= 0 {
 		fmt.Println("Invalid price! Must be a positive number.")
 		goto CreateProduct
 	}
 
-	err = h.CreateProduct(product.Name, product.Description, product.Price)
+	err = h.CreateProduct(product.Name, product.Description, price*100)
 	if err != nil {
 		slog.Error(err.Error())
 		fmt.Println(" Failed to create product. Please try again.")
