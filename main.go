@@ -35,8 +35,8 @@ func main() {
 	var user User
 	var u User
 	var input string
-	var w *tabwriter.Writer
 	var buf bytes.Buffer
+	w := tabwriter.NewWriter(&buf, 0, 0, 1, ' ', tabwriter.Debug)
 	scanner := bufio.NewScanner(os.Stdin)
 
 	fmt.Println("\n------- Welcome to Hacktiv8 Clothing Store -------")
@@ -149,7 +149,6 @@ UserMenu:
 
 ShowAllProducts:
 	fmt.Println("\nShowing all products.....")
-	w = tabwriter.NewWriter(&buf, 0, 0, 1, ' ', tabwriter.Debug)
 	fmt.Fprintln(w, "| Name\t Description\t Price\t")
 
 	products, err := handler.ReadAllProducts()
