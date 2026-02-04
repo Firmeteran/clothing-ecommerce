@@ -126,8 +126,18 @@ Exit:
 	return
 
 AdminMenu:
-	fmt.Println("Placeholder")
-	return
+	fmt.Println("\nAdmin Menu:")
+	fmt.Println("\n1.Create a Product")
+
+	scanner.Scan()
+	input = strings.TrimSpace(scanner.Text())
+
+	switch input {
+	// case "1":
+	// goto CreateProduct
+	default:
+		goto Exit
+	}
 
 UserMenu:
 	fmt.Println("\nUser Menu:")
