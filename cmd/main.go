@@ -190,7 +190,7 @@ CreateProduct:
 	priceStr = strings.TrimSpace(scanner.Text())
 
 	price, err = strconv.Atoi(priceStr)
-	if err != nil || product.Price <= 0 {
+	if err != nil || price <= 0 {
 		fmt.Println("Invalid price! Must be a positive number.")
 		goto CreateProduct
 	}
