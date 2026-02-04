@@ -300,6 +300,23 @@ func (h *Handler) CreateOrder(order entity.Order) error {
 		return err
 	}
 
+	// decrease stock
+	stmt, err = tx.Prepare(
+		`UPDATE products
+		SET stock = stock - ?
+		WHERE id = ?`,
+	)
+	if err != nil {
+		return err
+	}
+
+	for _, product := range order.Products {
+		_, err := stmt.Exec(product.Stock, product.Id)
+		if err != nil {
+			return err
+		}
+	}
+
 	if err := tx.Commit(); err != nil {
 		return err
 	}
