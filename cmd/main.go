@@ -136,7 +136,7 @@ AdminMenu:
 	fmt.Println("3. Show Order Reports")
 	fmt.Println("4. Show Stock Reports")
 	fmt.Println("5. Exit")
-	fmt.Print("Your input (1/2/3/4): ")
+	fmt.Print("Your input (1/2/3/4/5): ")
 
 	scanner.Scan()
 	input = strings.TrimSpace(scanner.Text())
@@ -203,7 +203,15 @@ CreateProduct:
 		goto CreateProduct
 	}
 
-	err = h.CreateProduct(product.Name, product.Description, price*100)
+	fmt.Print("Stock: ")
+	scanner.Scan()
+	product.Stock, err = strconv.Atoi(strings.TrimSpace(scanner.Text()))
+	if err != nil || product.Stock <= 0 {
+		fmt.Println("Invalid stock. Must be a positive number.")
+		goto CreateProduct
+	}
+
+	err = h.CreateProduct(product.Name, product.Description, price*100, product.Stock)
 	if err != nil {
 		slog.Error(err.Error())
 		fmt.Println(" Failed to create product. Please try again.")
@@ -217,7 +225,7 @@ CreateProduct:
 	// Users function
 ShowAllProducts:
 	fmt.Println("\nShowing all products.....")
-	fmt.Fprintln(w, "| Name\t Description\t Price\t")
+	fmt.Fprintln(w, "| Product ID\t Name\t Description\t Price\t Stock\t")
 
 	products, err = h.ReadAllProducts()
 	if err != nil {
@@ -226,7 +234,7 @@ ShowAllProducts:
 	}
 
 	for _, product := range products {
-		fmt.Fprintf(w, "| %s\t %s\t Rp%.2f\t\n", product.Name, product.Description, product.Price)
+		fmt.Fprintf(w, "| %d\t %s\t %s\t Rp%.2f\t %d\t\n", product.Id, product.Name, product.Description, product.Price, product.Stock)
 	}
 
 	if err := w.Flush(); err != nil {

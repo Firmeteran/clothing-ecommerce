@@ -59,13 +59,13 @@ func (h *Handler) ReadUserByEmail(email string) (entity.User, error) {
 }
 
 // create product
-func (h *Handler) CreateProduct(name, description string, price int) error {
+func (h *Handler) CreateProduct(name, description string, price, stock int) error {
 	_, err := h.DB.Exec(
 		`INSERT INTO products
-			(name, description, price)
+			(name, description, price, stock)
 		VALUES
-			(?, ?, ?);`,
-		name, description, price,
+			(?, ?, ?, ?);`,
+		name, description, price, stock,
 	)
 
 	if err != nil {
@@ -132,7 +132,8 @@ func (h *Handler) ReadAllProducts() ([]entity.Product, error) {
 			id,
 			name,
 			description,
-			price
+			price,
+			stock
 		FROM products;`,
 	)
 
@@ -152,6 +153,7 @@ func (h *Handler) ReadAllProducts() ([]entity.Product, error) {
 			&product.Name,
 			&product.Description,
 			&price,
+			&product.Stock,
 		); err != nil {
 			return nil, err
 		}
