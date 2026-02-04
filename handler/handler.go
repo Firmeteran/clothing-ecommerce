@@ -210,15 +210,18 @@ func (h *Handler) ReadCartItemsByUserID(userID int) ([]entity.Product, error) {
 
 	for rows.Next() {
 		var product entity.Product
+		var price int
 
 		if err := rows.Scan(
 			&product.Name,
 			&product.Description,
-			&product.Price,
+			&price,
 			&product.Quantity,
 		); err != nil {
 			return nil, err
 		}
+		
+		product.Price = float32(price) / 100
 
 		products = append(products, product)
 	}

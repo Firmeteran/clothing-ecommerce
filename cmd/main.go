@@ -41,7 +41,6 @@ func main() {
 		u         entity.User
 		products  []entity.Product
 		product   entity.Product
-		cartItems []entity.CartItem
 		priceStr  string
 		input     string
 		buf       bytes.Buffer
@@ -257,20 +256,21 @@ AddToCart:
 	goto UserMenu
 
 ShowCart:
-	cartItems, err = h.ReadCartItemsByUserID(user.Id)
+	products, err = h.ReadCartItemsByUserID(user.Id)
 	if err != nil {
 		slog.Error(err.Error())
 		fmt.Println("\nFailed to load cart. Please try again.")
 		goto ShowCart
 	}
 	
-	if len(cartItems) == 0 {
+	if len(products) == 0 {
 		fmt.Println("\nYour cart is empty.")
 		goto ShowCart
 	} else {
 		fmt.Println("\nCart Contents: ")
-		for _, item := range cartItems {
-			fmt.Printf("- Product ID: %d, Total: %d\n", item.ProductId, item.Quantity)
+		for _, product := range products {
+			fmt.Fprintln(w, "| Name\t Description\t Price\t Quantity")
+			fmt.Fprintf(w, "| %s\t %s\t Rp%.2f\t %d\t\n", product.Name, product.Description, product.Price, product.Quantity)
 		}
 	}
 	
