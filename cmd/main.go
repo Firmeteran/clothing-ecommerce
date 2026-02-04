@@ -238,7 +238,7 @@ AddToCart:
 		goto AddToCart
 	}
 
-	fmt.Print("\nQuantity: ")
+	fmt.Print("Quantity: ")
 	scanner.Scan()
 	product.Quantity, err = strconv.Atoi(strings.TrimSpace(scanner.Text()))
 	if err != nil {
