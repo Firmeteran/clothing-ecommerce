@@ -311,7 +311,7 @@ func (h *Handler) CreateOrder(order entity.Order) error {
 	}
 
 	for _, product := range order.Products {
-		_, err := stmt.Exec(product.Stock, product.Id)
+		_, err := stmt.Exec(product.Quantity, product.Id)
 		if err != nil {
 			return err
 		}
