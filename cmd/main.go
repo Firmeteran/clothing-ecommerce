@@ -8,6 +8,7 @@ import (
 	"log"
 	"log/slog"
 	"os"
+	"strconv"
 	"strings"
 	"text/tabwriter"
 
@@ -37,6 +38,8 @@ func main() {
 	// variables
 	var user entity.User
 	var u entity.User
+	var products []entity.Product
+	var product entity.Product
 	var input string
 	var buf bytes.Buffer
 	w := tabwriter.NewWriter(&buf, 0, 0, 1, ' ', tabwriter.Debug)
@@ -140,12 +143,12 @@ UserMenu:
 	switch input {
 	case "1":
 		goto ShowAllProducts
-	// case "2":
-	// 	goto AddToCart
+	case "2":
+		goto AddToCart // CreateCartItem
 	// case "3":
-	// 	goto ShowCart
+	// 	goto ShowCart // ReadCartItemsByUserID
 	// case "4":
-	// 	goto CreateOrder
+	// 	goto CreateOrder // CreateOrder
 	default:
 		goto Exit
 	}
@@ -154,7 +157,7 @@ ShowAllProducts:
 	fmt.Println("\nShowing all products.....")
 	fmt.Fprintln(w, "| Name\t Description\t Price\t")
 
-	products, err := h.ReadAllProducts()
+	products, err = h.ReadAllProducts()
 	if err != nil {
 		slog.Error(err.Error())
 		return
@@ -172,4 +175,29 @@ ShowAllProducts:
 	helper.PrintStdOut(&buf)
 
 	goto UserMenu
+
+AddToCart:
+	fmt.Print("\nproduct id: ")
+	scanner.Scan()
+	product.Id, err = strconv.Atoi(strings.TrimSpace(scanner.Text()))
+	if err != nil {
+		slog.Error(err.Error())
+		fmt.Println("\nInvalid product ID!!!!")
+		goto AddToCart
+	}
+
+	fmt.Print("\nquantity: ")
+	scanner.Scan()
+	product.Quantity, err = strconv.Atoi(strings.TrimSpace(scanner.Text()))
+	if err != nil {
+		slog.Error(err.Error())
+		fmt.Println("\nInvalid quantity!!!!")
+		goto AddToCart
+	}
+
+	err = h.CreateCartItem(user.Id, product.Id, product.Quantity)
+	if err != nil {
+		slog.Error(err.Error())
+		goto AddToCart
+	}
 }
