@@ -144,9 +144,9 @@ UserMenu:
 	case "1":
 		goto ShowAllProducts
 	case "2":
-		goto AddToCart // CreateCartItem
-	// case "3":
-	// 	goto ShowCart // ReadCartItemsByUserID
+		goto AddToCart
+	case "3":
+		goto ShowCart
 	// case "4":
 	// 	goto CreateOrder // CreateOrder
 	default:
@@ -177,7 +177,7 @@ ShowAllProducts:
 	goto UserMenu
 
 AddToCart:
-	fmt.Print("\nproduct id: ")
+	fmt.Print("\nProduct ID: ")
 	scanner.Scan()
 	product.Id, err = strconv.Atoi(strings.TrimSpace(scanner.Text()))
 	if err != nil {
@@ -186,7 +186,7 @@ AddToCart:
 		goto AddToCart
 	}
 
-	fmt.Print("\nquantity: ")
+	fmt.Print("\nQuantity: ")
 	scanner.Scan()
 	product.Quantity, err = strconv.Atoi(strings.TrimSpace(scanner.Text()))
 	if err != nil {
@@ -200,4 +200,24 @@ AddToCart:
 		slog.Error(err.Error())
 		goto AddToCart
 	}
+
+ShowCart:
+	cartItems, err := h.ReadCartItemsByUserID(user.Id)
+	if len(cartItems) == 0 {
+		fmt.Println("\nYour cart is empty.")
+	} else {
+		fmt.Println("\nCart Contents: ")
+		for _, item := range cartItems {
+			fmt.Printf("- Product ID: %d, Total: %d\n", item.ProductId, item.Quantity)
+		}
+	}
+
+	if err != nil {
+		slog.Error(err.Error())
+		fmt.Println("\nFailed to load cart. Please try again.")
+		goto ShowCart
+	}
+
+	fmt.Print("\nPress Enter to return.")
+	scanner.Scan()
 }
