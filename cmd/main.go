@@ -11,6 +11,9 @@ import (
 	"strings"
 	"text/tabwriter"
 
+	"github.com/airlangga-hub/clothing-ecommerce/entity"
+	"github.com/airlangga-hub/clothing-ecommerce/handler"
+	"github.com/airlangga-hub/clothing-ecommerce/helper"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 )
@@ -29,11 +32,11 @@ func main() {
 	}
 	defer db.Close()
 
-	handler := NewHandler(db)
+	h := handler.NewHandler(db)
 
 	// variables
-	var user User
-	var u User
+	var user entity.User
+	var u entity.User
 	var input string
 	var buf bytes.Buffer
 	w := tabwriter.NewWriter(&buf, 0, 0, 1, ' ', tabwriter.Debug)
@@ -69,12 +72,12 @@ Register:
 	scanner.Scan()
 	user.Password = strings.TrimSpace(scanner.Text())
 
-	if err := handler.CreateUser(user.Email, user.Password); err != nil {
+	if err := h.CreateUser(user.Email, user.Password); err != nil {
 		slog.Error(err.Error())
 		goto MainMenu
 	}
 
-	user, err = handler.ReadUserByEmail(user.Email)
+	user, err = h.ReadUserByEmail(user.Email)
 	if err != nil {
 		slog.Error(err.Error())
 		goto MainMenu
@@ -93,7 +96,7 @@ Login:
 	scanner.Scan()
 	user.Password = strings.TrimSpace(scanner.Text())
 
-	u, err = handler.ReadUserByEmail(user.Email)
+	u, err = h.ReadUserByEmail(user.Email)
 	if err != nil {
 		slog.Error(err.Error())
 		goto MainMenu
@@ -151,7 +154,7 @@ ShowAllProducts:
 	fmt.Println("\nShowing all products.....")
 	fmt.Fprintln(w, "| Name\t Description\t Price\t")
 
-	products, err := handler.ReadAllProducts()
+	products, err := h.ReadAllProducts()
 	if err != nil {
 		slog.Error(err.Error())
 		return
@@ -166,7 +169,7 @@ ShowAllProducts:
 		goto UserMenu
 	}
 
-	PrintStdOut(&buf)
+	helper.PrintStdOut(&buf)
 
 	goto UserMenu
 }
