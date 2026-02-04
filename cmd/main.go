@@ -40,6 +40,7 @@ func main() {
 	var u entity.User
 	var products []entity.Product
 	var product entity.Product
+	var cartItems []entity.CartItem
 	var input string
 	var buf bytes.Buffer
 	w := tabwriter.NewWriter(&buf, 0, 0, 1, ' ', tabwriter.Debug)
@@ -147,8 +148,8 @@ UserMenu:
 		goto AddToCart
 	case "3":
 		goto ShowCart
-	// case "4":
-	// 	goto CreateOrder // CreateOrder
+	case "4":
+		goto CreateOrders
 	default:
 		goto Exit
 	}
@@ -202,9 +203,10 @@ AddToCart:
 	}
 
 ShowCart:
-	cartItems, err := h.ReadCartItemsByUserID(user.Id)
+	cartItems, err = h.ReadCartItemsByUserID(user.Id)
 	if len(cartItems) == 0 {
 		fmt.Println("\nYour cart is empty.")
+		goto ShowCart
 	} else {
 		fmt.Println("\nCart Contents: ")
 		for _, item := range cartItems {
@@ -218,6 +220,11 @@ ShowCart:
 		goto ShowCart
 	}
 
-	fmt.Print("\nPress Enter to return.")
-	scanner.Scan()
+CreateOrders:
+	err = h.CreateOrder(entity.Order{})
+	if err != nil {
+		slog.Error(err.Error())
+		fmt.Println("Failed to place order. Please try again.")
+		return
+	}
 }
