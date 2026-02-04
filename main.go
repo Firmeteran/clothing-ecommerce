@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"database/sql"
 	"fmt"
 	"log"
@@ -35,6 +36,7 @@ func main() {
 	var u User
 	var input string
 	var w *tabwriter.Writer
+	var buf bytes.Buffer
 	scanner := bufio.NewScanner(os.Stdin)
 
 	fmt.Println("\n------- Welcome to Hacktiv8 Clothing Store -------")
@@ -147,8 +149,8 @@ UserMenu:
 
 ShowAllProducts:
 	fmt.Println("\nShowing all products.....")
-	w = tabwriter.NewWriter(os.Stdout, 0, 0, 5, ' ', tabwriter.Debug)
-	fmt.Fprintln(w, "\nName\tDescription\tPrice")
+	w = tabwriter.NewWriter(&buf, 0, 0, 1, ' ', tabwriter.Debug)
+	fmt.Fprintln(w, "| Name\t Description\t Price\t")
 
 	products, err := handler.ReadAllProducts()
 	if err != nil {
@@ -157,13 +159,15 @@ ShowAllProducts:
 	}
 
 	for _, product := range products {
-		fmt.Fprintf(w, "%s\t%s\tRp%.2f\n", product.Name, product.Description, product.Price)
+		fmt.Fprintf(w, "| %s\t %s\t Rp%.2f\t\n", product.Name, product.Description, product.Price)
 	}
 
 	if err := w.Flush(); err != nil {
 		slog.Error(err.Error())
 		goto UserMenu
 	}
+
+	PrintStdOut(&buf)
 
 	goto UserMenu
 }
