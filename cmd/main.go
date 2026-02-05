@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"log/slog"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -45,7 +46,7 @@ func main() {
 		input      string
 		buf        bytes.Buffer
 		price      int
-		totalprice float32
+		totalprice int
 	)
 	w := tabwriter.NewWriter(&buf, 0, 0, 1, ' ', tabwriter.Debug)
 	scanner := bufio.NewScanner(os.Stdin)
@@ -310,10 +311,10 @@ CreateOrders:
 	}
 
 	for _, product := range products {
-		totalprice += product.Price * float32(product.Quantity)
+		totalprice += int(math.Round(product.Price*100)) * product.Quantity
 	}
 
-	err = h.CreateOrder(entity.Order{UserId: user.Id, Products: products, TotalPrice: totalprice * 100})
+	err = h.CreateOrder(entity.InsertOrder{UserId: user.Id, Products: products, TotalPrice: totalprice * 100})
 	if err != nil {
 		slog.Error(err.Error())
 		fmt.Println("Failed to place order. Please try again.")

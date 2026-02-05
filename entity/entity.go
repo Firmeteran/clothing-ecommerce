@@ -13,7 +13,7 @@ type Product struct {
 	Id          int
 	Name        string
 	Description string
-	Price       float32
+	Price       float64
 	Quantity    int
 	Stock       int
 }
@@ -35,7 +35,7 @@ type OrderItem struct {
 type Order struct {
 	Id         int
 	UserId     int
-	TotalPrice float32
+	TotalPrice float64
 	CreatedAt  time.Time
 	Products   []Product
 }

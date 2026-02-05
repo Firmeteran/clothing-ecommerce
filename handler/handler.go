@@ -117,7 +117,7 @@ func (h *Handler) ReadProductsByProductIDs(productIDs []int) ([]entity.Product, 
 			return nil, err
 		}
 
-		product.Price = float32(price) / 100
+		product.Price = float64(price) / 100
 
 		products = append(products, product)
 	}
@@ -158,7 +158,7 @@ func (h *Handler) ReadAllProducts() ([]entity.Product, error) {
 			return nil, err
 		}
 
-		product.Price = float32(price) / 100
+		product.Price = float64(price) / 100
 
 		products = append(products, product)
 	}
@@ -225,7 +225,7 @@ func (h *Handler) ReadCartItemsByUserID(userID int) ([]entity.Product, error) {
 			return nil, err
 		}
 
-		product.Price = float32(price) / 100
+		product.Price = float64(price) / 100
 
 		products = append(products, product)
 	}
@@ -253,7 +253,7 @@ func (h *Handler) DeleteCartItemsByUserID(userID int) error {
 }
 
 // create order
-func (h *Handler) CreateOrder(order entity.Order) error {
+func (h *Handler) CreateOrder(order entity.InsertOrder) error {
 	tx, err := h.DB.Begin()
 	if err != nil {
 		return err
