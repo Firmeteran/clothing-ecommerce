@@ -46,7 +46,10 @@ CREATE PROCEDURE place_order_items(IN o_id INTEGER, IN p_id INTEGER, IN qty INTE
 BEGIN
     DECLARE current_stock INTEGER;
     
-    SELECT stock INTO current_stock FROM products WHERE id = p_id;
+    SELECT stock INTO current_stock 
+    FROM products 
+    WHERE id = p_id
+    FOR UPDATE;
     
     IF current_stock < qty THEN
         SIGNAL SQLSTATE '45000'
