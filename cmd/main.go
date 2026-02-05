@@ -231,7 +231,7 @@ ShowAllProducts:
 	products, err = h.ReadAllProducts()
 	if err != nil {
 		slog.Error(err.Error())
-		return
+		goto UserMenu
 	}
 
 	for _, product := range products {
