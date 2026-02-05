@@ -399,3 +399,5 @@ func (h *Handler) ReadOrdersByUserID(userID int) ([]entity.Order, error) {
 
 	return orders, nil
 }
+
+func (h *Handler) UserReport(userID int) 

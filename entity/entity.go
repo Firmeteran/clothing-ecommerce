@@ -9,6 +9,12 @@ type User struct {
 	Role     string
 }
 
+type UserReport struct {
+	Id            int
+	Email         string
+	TotalSpending float64
+}
+
 type Product struct {
 	Id          int
 	Name        string
@@ -17,13 +23,6 @@ type Product struct {
 	Quantity    int
 	Stock       int
 }
-// unused
-// type CartItem struct {
-// 	Id        int
-// 	UserId    int
-// 	ProductId int
-// 	Quantity  int
-// }
 
 type OrderItem struct {
 	Id        int
