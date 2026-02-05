@@ -330,6 +330,7 @@ CreateOrders:
 	goto UserMenu
 
 ShowOrders:
+	fmt.Println("\nHere are your orders:")
 	orders, err := h.ReadOrdersByUserID(user.Id)
 	if err != nil {
 		slog.Error(err.Error())
