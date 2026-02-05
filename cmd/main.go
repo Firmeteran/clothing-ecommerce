@@ -223,7 +223,7 @@ CreateProduct:
 		goto CreateProduct
 	}
 
-	fmt.Println("Product created successfully!!!!")
+	fmt.Println("\nProduct created successfully!!!!")
 
 	goto AdminMenu
 
@@ -306,7 +306,7 @@ UserMenu:
 	fmt.Println("4. Checkout Order")
 	fmt.Println("5. Show Orders")
 	fmt.Println("6. Exit")
-	fmt.Print("Your input (1/2/3/4/5): ")
+	fmt.Print("Your input (1/2/3/4/5/6): ")
 
 	scanner.Scan()
 	input = strings.TrimSpace(scanner.Text())
