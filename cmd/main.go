@@ -73,6 +73,8 @@ MainMenu:
 	}
 
 Register:
+	user = entity.User{}
+
 	fmt.Print("\nEmail: ")
 	scanner.Scan()
 	user.Email = strings.TrimSpace(scanner.Text())
@@ -97,6 +99,8 @@ Register:
 	goto UserMenu
 
 Login:
+	user = entity.User{}
+
 	fmt.Print("\nEmail: ")
 	scanner.Scan()
 	user.Email = strings.TrimSpace(scanner.Text())
@@ -155,36 +159,10 @@ AdminMenu:
 		goto Exit
 	}
 
-UserMenu:
-	fmt.Println("\nUser Menu:")
-	fmt.Println("1. Show All Products")
-	fmt.Println("2. Add To Cart")
-	fmt.Println("3. Show Cart")
-	fmt.Println("4. Checkout Order")
-	fmt.Println("5. Show Orders")
-	fmt.Println("6. Exit")
-	fmt.Print("Your input (1/2/3/4/5): ")
-
-	scanner.Scan()
-	input = strings.TrimSpace(scanner.Text())
-
-	switch input {
-	case "1":
-		goto ShowAllProducts
-	case "2":
-		goto AddToCart
-	case "3":
-		goto ShowCart
-	case "4":
-		goto CreateOrders
-	case "5":
-		goto ShowOrders
-	default:
-		goto Exit
-	}
-
 	// Admin function
 CreateProduct:
+	product = entity.Product{}
+
 	fmt.Print("\nProduct name: ")
 	scanner.Scan()
 	product.Name = strings.TrimSpace(scanner.Text())
@@ -226,6 +204,34 @@ CreateProduct:
 
 	goto AdminMenu
 
+UserMenu:
+	fmt.Println("\nUser Menu:")
+	fmt.Println("1. Show All Products")
+	fmt.Println("2. Add To Cart")
+	fmt.Println("3. Show Cart")
+	fmt.Println("4. Checkout Order")
+	fmt.Println("5. Show Orders")
+	fmt.Println("6. Exit")
+	fmt.Print("Your input (1/2/3/4/5): ")
+
+	scanner.Scan()
+	input = strings.TrimSpace(scanner.Text())
+
+	switch input {
+	case "1":
+		goto ShowAllProducts
+	case "2":
+		goto AddToCart
+	case "3":
+		goto ShowCart
+	case "4":
+		goto CreateOrders
+	case "5":
+		goto ShowOrders
+	default:
+		goto Exit
+	}
+
 	// Users function
 ShowAllProducts:
 	fmt.Println("\nShowing all products.....")
@@ -252,6 +258,8 @@ ShowAllProducts:
 	goto UserMenu
 
 AddToCart:
+	product = entity.Product{}
+
 	fmt.Print("\nProduct ID: ")
 	scanner.Scan()
 	product.Id, err = strconv.Atoi(strings.TrimSpace(scanner.Text()))
@@ -309,6 +317,8 @@ ShowCart:
 	goto UserMenu
 
 CreateOrders:
+	totalprice = 0
+
 	products, err = h.ReadCartItemsByUserID(user.Id)
 	if err != nil {
 		fmt.Println("Failed to place order. Please try again.")
@@ -336,7 +346,7 @@ ShowOrders:
 		slog.Error(err.Error())
 		goto UserMenu
 	}
-	
+
 	fmt.Fprintln(w, "| Order ID\t User ID\t Total Price\t Product\t Description\t Quantity\t Created At\t")
 	for _, order := range orders {
 		for _, product := range order.Products {
