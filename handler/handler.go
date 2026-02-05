@@ -173,12 +173,7 @@ func (h *Handler) ReadAllProducts() ([]entity.Product, error) {
 // create cart item
 func (h *Handler) CreateCartItem(userID, productID, quantity int) error {
 	_, err := h.DB.Exec(
-		`INSERT INTO cart_items
-			(user_id, product_id, quantity)
-		VALUES
-			(?, ?, ?) AS new
-		ON DUPLICATE KEY
-		UPDATE quantity = cart_items.quantity + new.quantity;`,
+		`call place_cart_item(?, ?, ?)`,
 		userID, productID, quantity,
 	)
 
@@ -430,11 +425,11 @@ func (h *Handler) UserReport() ([]entity.UserReport, error) {
 		); err != nil {
 			return nil, err
 		}
-		
+
 		userReport.TotalSpending = float64(totalSpending) / 100
-		
+
 		userReports = append(userReports, userReport)
 	}
-	
+
 	return userReports, nil
 }
