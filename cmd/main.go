@@ -244,6 +244,7 @@ ShowAllProducts:
 	}
 
 	helper.PrintStdOut(&buf)
+	buf.Reset()
 
 	goto UserMenu
 
@@ -300,6 +301,7 @@ ShowCart:
 	}
 
 	helper.PrintStdOut(&buf)
+	buf.Reset()
 
 	goto UserMenu
 
