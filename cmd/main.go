@@ -82,9 +82,19 @@ Register:
 	scanner.Scan()
 	user.Email = strings.TrimSpace(scanner.Text())
 
+	if user.Email == "" {
+		fmt.Println("\nEmail cannot be empty.")
+		goto Register
+	}
+
 	fmt.Print("Password: ")
 	scanner.Scan()
 	user.Password = strings.TrimSpace(scanner.Text())
+
+	if user.Password == "" {
+		fmt.Println("\nPassword cannot be empty.")
+		goto Register
+	}
 
 	if err := h.CreateUser(user.Email, user.Password); err != nil {
 		slog.Error(err.Error())
@@ -108,9 +118,19 @@ Login:
 	scanner.Scan()
 	user.Email = strings.TrimSpace(scanner.Text())
 
+	if user.Email == "" {
+		fmt.Println("\nEmail cannot be empty.")
+		goto Login
+	}
+
 	fmt.Print("Password: ")
 	scanner.Scan()
 	user.Password = strings.TrimSpace(scanner.Text())
+
+	if user.Password == "" {
+		fmt.Println("\nPassword cannot be empty.")
+		goto Login
+	}
 
 	u, err = h.ReadUserByEmail(user.Email)
 	if err != nil {
@@ -343,12 +363,22 @@ AddToCart:
 		goto AddToCart
 	}
 
+	if product.Id <= 0 {
+		fmt.Println("\nProduct ID must be a positive number.")
+		goto AddToCart
+	}
+
 	fmt.Print("Quantity: ")
 	scanner.Scan()
 	product.Quantity, err = strconv.Atoi(strings.TrimSpace(scanner.Text()))
 	if err != nil {
 		slog.Error(err.Error())
 		fmt.Println("\nInvalid quantity!!!!")
+		goto AddToCart
+	}
+
+	if product.Quantity <= 0 {
+		fmt.Println("\nQuantity must be a positive number.")
 		goto AddToCart
 	}
 
