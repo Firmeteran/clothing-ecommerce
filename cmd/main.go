@@ -316,7 +316,7 @@ CreateOrders:
 		totalprice += int(math.Round(product.Price*100)) * product.Quantity
 	}
 
-	err = h.CreateOrder(entity.InsertOrder{UserId: user.Id, Products: products, TotalPrice: totalprice * 100})
+	err = h.CreateOrder(entity.InsertOrder{UserId: user.Id, Products: products, TotalPrice: totalprice})
 	if err != nil {
 		slog.Error(err.Error())
 		fmt.Println("Failed to place order. Please try again.")
