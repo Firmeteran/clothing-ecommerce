@@ -17,13 +17,13 @@ type Product struct {
 	Quantity    int
 	Stock       int
 }
-
-type CartItem struct {
-	Id        int
-	UserId    int
-	ProductId int
-	Quantity  int
-}
+// unused
+// type CartItem struct {
+// 	Id        int
+// 	UserId    int
+// 	ProductId int
+// 	Quantity  int
+// }
 
 type OrderItem struct {
 	Id        int
@@ -36,6 +36,14 @@ type Order struct {
 	Id         int
 	UserId     int
 	TotalPrice float32
+	CreatedAt  time.Time
+	Products   []Product
+}
+
+type InsertOrder struct {
+	Id         int
+	UserId     int
+	TotalPrice int
 	CreatedAt  time.Time
 	Products   []Product
 }
