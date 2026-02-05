@@ -400,4 +400,40 @@ func (h *Handler) ReadOrdersByUserID(userID int) ([]entity.Order, error) {
 	return orders, nil
 }
 
-func (h *Handler) UserReport(userID int) 
+func (h *Handler) UserReport() ([]entity.UserReport, error) {
+	rows, err := h.DB.Query(
+		`SELECT
+			u.id,
+			u.email,
+			SUM(o.total_price) AS total_spending
+		FROM users u
+		JOIN orders o ON u.id = o.user_id
+		GROUP BY u.id`,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	userReports := make([]entity.UserReport, 0, 10)
+
+	for rows.Next() {
+		var userReport entity.UserReport
+		var totalSpending int
+
+		if err := rows.Scan(
+			&userReport.Id,
+			&userReport.Email,
+			&totalSpending,
+		); err != nil {
+			return nil, err
+		}
+		
+		userReport.TotalSpending = float64(totalSpending) / 100
+		
+		userReports = append(userReports, userReport)
+	}
+	
+	return userReports, nil
+}
